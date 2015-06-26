@@ -4,6 +4,8 @@ MAINTAINER Maurice Kaag <mkaag@me.com>
 # -----------------------------------------------------------------------------
 # Environment variables
 # -----------------------------------------------------------------------------
+ENV FRIENDICA_VERSION 3.4
+ENV ADDONS_VERSION    3.1
 
 # -----------------------------------------------------------------------------
 # Pre-install
@@ -30,9 +32,15 @@ RUN \
 
 WORKDIR /opt
 RUN \
-  git clone https://github.com/friendica/friendica.git && \
-  git clone https://github.com/friendica/friendica-addons.git friendica/addon && \
-  chmod 777 friendica/view/smarty3
+  curl -L -s -o friendica.tgz https://github.com/friendica/friendica/archive/${FRIENDICA_VERSION}.tar.gz && \
+  tar zxf friendica.tgz && \
+  rm -f friendica.tgz && \
+  ln -s friendica-${FRIENDICA_VERSION} friendica && \
+  chmod 777 friendica/view/smarty3 && \
+  curl -L -s -o friendica_addons.tgz https://github.com/friendica/friendica-addons/archive/${ADDONS_VERSION}.tar.gz && \
+  mkdir friendica/addon && \
+  tar zxvf friendica_addons.tgz -C friendica/addon --strip-components=1 && \
+  rm -f friendica_addons.tgz
 
 # -----------------------------------------------------------------------------
 # Post-install
@@ -43,7 +51,7 @@ ADD build/nginx.conf /etc/nginx/sites-enabled/friendica
 ADD build/status.conf /etc/nginx/conf.d/status.conf
 
 RUN \
-    sed -i "s/\/opt\/friendica/" /etc/php5/fpm/php.ini && \
+    sed -i "s/\/var\/www/\/opt\/friendica/" /etc/php5/fpm/php.ini && \
     rm /etc/nginx/sites-enabled/default && \
     chmod +x /etc/my_init.d/13_phpfpm.sh && \
     chmod +x /etc/my_init.d/14_nginx.sh
