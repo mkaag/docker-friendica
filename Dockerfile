@@ -39,7 +39,7 @@ RUN \
 # -----------------------------------------------------------------------------
 ADD build/phpfpm.sh /etc/my_init.d/13_phpfpm.sh
 ADD build/nginx.sh /etc/my_init.d/14_nginx.sh
-ADD build/nginx.conf /etc/nginx/sites-enabled/owncloud
+ADD build/nginx.conf /etc/nginx/sites-enabled/friendica
 ADD build/status.conf /etc/nginx/conf.d/status.conf
 
 RUN \
