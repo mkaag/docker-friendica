@@ -13,7 +13,7 @@ This repository contains the **Dockerfile** to run [Friendica](http://www.friend
 ### Installation
 
 ```bash
-docker build -t mkaag/yacy github.com/mkaag/docker-friendica
+docker build -t mkaag/friendica github.com/mkaag/docker-friendica
 ```
 
 ### Usage
